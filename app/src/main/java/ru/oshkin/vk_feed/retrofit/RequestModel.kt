@@ -41,7 +41,10 @@ data class WallPost(
     @SerializedName("copy_history")
     @Expose
     val copyHistory: List<WallPost>
-)
+) {
+    fun getPhotos() = attachments?.filter { it.photo != null } ?: arrayListOf()
+    fun isEmpty() = getPhotos().isEmpty() && text.isEmpty()
+}
 
 data class InfoGroup(
     @SerializedName("name")
@@ -85,10 +88,10 @@ data class Attachments(
     val type: String,
     @SerializedName("photo")
     @Expose
-    val photo: Photo,
+    val photo: Photo?,
     @SerializedName("link")
     @Expose
-    val link: Link
+    val link: Link?
 )
 
 data class Photo(

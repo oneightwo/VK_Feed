@@ -1,13 +1,11 @@
 package ru.oshkin.vk_feed.newsLine
 
-import android.content.res.Resources
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.util.DisplayMetrics
-import android.view.Display
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
@@ -16,43 +14,69 @@ import ru.oshkin.vk_feed.retrofit.*
 import java.text.SimpleDateFormat
 import java.util.*
 
-class AdapterNews(private var loader: () -> Unit) : RecyclerView.Adapter<AdapterNews.ViewHolder>() {
+class AdapterNews(
+    private val activity: NewsActivity,
+    private val loader: () -> Unit
+) : RecyclerView.Adapter<AdapterNews.ViewHolder>() {
 
     private val posts = arrayListOf<WallPost>()
     private val groups = hashSetOf<InfoGroup>()
     private val profiles = hashSetOf<InfoProfile>()
+    private val displayWidth by lazy {
+        val displayMetrics = DisplayMetrics()
+        activity.windowManager.defaultDisplay.getMetrics(displayMetrics)
+        displayMetrics.widthPixels
+    }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val post = posts[position]
         val author = getAuthor(post.sourceId) ?: return
 
-//
-//
-//        val displayWidth:
-//
-//        val displayHeight: Int = DisplayMetrics().heightPixels
-
 
         with(viewHolder) {
-            textNews.text = post.text
+
+            textNews.setVisible(post.text.isNotEmpty())
+            newsImage.setVisible(post.getPhotos().isNotEmpty())
+
+            val postText = post.text
+            if (postText.length > 400) {
+                textNewsAll.visibility = View.VISIBLE
+                textNews.text = postText.substring(0, 400) + "..."
+            } else {
+                textNewsAll.visibility = View.GONE
+                textNews.text = postText
+            }
+
+            textNewsAll.setOnClickListener {
+                textNews.text = postText
+                textNewsAll.visibility = View.GONE
+            }
+
+
             nameGroup.text = author.name()
 
             timePost.text = SimpleDateFormat("dd.MM.yyyy hh:mm").format(Date(post.date * 1000L))
             Picasso.get().load(author.photo()).into(iconGroup)
 
+
             if (post.attachments != null && post.attachments[0].photo != null) {
-
-                Picasso.get().load(post.attachments[0].photo.getOptimalPhoto().url).into(newsImage)
+                newsImage.visibility = View.VISIBLE
+                val optimalPhoto = post.attachments[0].photo!!.getOptimalPhoto()
+                Picasso.get().load(optimalPhoto.url).resize(displayWidth, getHeight(optimalPhoto)).into(newsImage)
+            } else {
+                newsImage.visibility = View.GONE
             }
 
-            textNewsAll.setOnClickListener {
-                textNews.maxLines = Integer.MAX_VALUE
-                textNews.ellipsize = null
-                textNewsAll.visibility = View.GONE
-            }
 
         }
     }
+
+    fun View.setVisible(visible: Boolean) {
+        visibility = if (visible) View.VISIBLE else View.GONE
+    }
+
+    private fun getHeight(photoSize: PhotoSize) =
+        (photoSize.height * (displayWidth.toDouble() / photoSize.width)).toInt()
 
     fun clear() {
         posts.clear()
@@ -62,7 +86,7 @@ class AdapterNews(private var loader: () -> Unit) : RecyclerView.Adapter<Adapter
     fun add(response: FeedResponse) {
         isLoading = false
         val before = itemCount
-        posts.addAll(response.items)
+        posts.addAll(response.items.filter { !it.isEmpty() })
         groups.addAll(response.groups)
         profiles.addAll(response.profiles)
         notifyItemRangeInserted(before, response.items.size)
