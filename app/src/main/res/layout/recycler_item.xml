@@ -2,7 +2,9 @@
 <android.support.v7.widget.CardView
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent" android:layout_height="wrap_content"
+        app:cardBackgroundColor="@color/colorPrimary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:orientation="horizontal">
 
@@ -52,6 +54,7 @@
                         android:layout_marginBottom="0dp"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="8dp"
+                        android:textColor="@color/colorAccent"
                         android:text="Тольятти"
                         android:textSize="16sp"
                         android:textStyle="bold"/>
@@ -61,7 +64,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
-                        android:text="сегодня в 11:05"/>
+                        android:textColor="@color/colorAccent"/>
 
             </LinearLayout>
 
@@ -74,11 +77,13 @@
                 android:orientation="vertical">
             <TextView
                     android:id="@+id/news_tv"
+                    android:textColor="@color/colorText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
             <TextView
                     android:id="@+id/news_all_tv"
+                    android:textColor="@color/colorAccent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Показать полностью..."

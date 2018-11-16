@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.squareup.picasso.Picasso
 import ru.oshkin.vk_feed.R
 import ru.oshkin.vk_feed.retrofit.*
+import ru.oshkin.vk_feed.tool.setVisible
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -55,7 +56,7 @@ class AdapterNews(
 
             nameGroup.text = author.name()
 
-            timePost.text = SimpleDateFormat("dd.MM.yyyy hh:mm").format(Date(post.date * 1000L))
+            timePost.text = SimpleDateFormat("hh:mm dd.MM.yyyy ").format(Date(post.date * 1000L))
             Picasso.get().load(author.photo()).into(iconGroup)
 
 
@@ -71,9 +72,6 @@ class AdapterNews(
         }
     }
 
-    fun View.setVisible(visible: Boolean) {
-        visibility = if (visible) View.VISIBLE else View.GONE
-    }
 
     private fun getHeight(photoSize: PhotoSize) =
         (photoSize.height * (displayWidth.toDouble() / photoSize.width)).toInt()
