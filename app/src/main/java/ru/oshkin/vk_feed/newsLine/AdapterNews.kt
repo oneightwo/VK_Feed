@@ -30,15 +30,40 @@ class AdapterNews(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+
         val post = posts[position]
         val author = getAuthor(post.sourceId) ?: return
-
+        val sdf = SimpleDateFormat("hh:mm dd.MM.yyyy")
 
         with(viewHolder) {
 
             textNews.setVisible(post.text.isNotEmpty())
             newsImage.setVisible(post.getPhotos().isNotEmpty())
 
+            setAllText(viewHolder, post)
+            nameGroup.text = author.name()
+            timePost.text = sdf.format(Date(post.date * 1000L))
+
+            Picasso.get().load(author.photo()).into(iconGroup)
+
+            visibleImageView(viewHolder, post)
+        }
+    }
+
+    private fun visibleImageView(viewHolder: ViewHolder, post: WallPost) {
+        with(viewHolder) {
+            if (post.attachments != null && post.attachments[0].photo != null) {
+                newsImage.visibility = View.VISIBLE
+                val optimalPhoto = post.attachments[0].photo!!.getOptimalPhoto()
+                Picasso.get().load(optimalPhoto.url).resize(displayWidth, getHeight(optimalPhoto)).into(newsImage)
+            } else {
+                newsImage.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun setAllText(viewHolder: ViewHolder, post: WallPost) {
+        with(viewHolder) {
             val postText = post.text
             if (postText.length > 400) {
                 textNewsAll.visibility = View.VISIBLE
@@ -52,23 +77,6 @@ class AdapterNews(
                 textNews.text = postText
                 textNewsAll.visibility = View.GONE
             }
-
-
-            nameGroup.text = author.name()
-
-            timePost.text = SimpleDateFormat("hh:mm dd.MM.yyyy ").format(Date(post.date * 1000L))
-            Picasso.get().load(author.photo()).into(iconGroup)
-
-
-            if (post.attachments != null && post.attachments[0].photo != null) {
-                newsImage.visibility = View.VISIBLE
-                val optimalPhoto = post.attachments[0].photo!!.getOptimalPhoto()
-                Picasso.get().load(optimalPhoto.url).resize(displayWidth, getHeight(optimalPhoto)).into(newsImage)
-            } else {
-                newsImage.visibility = View.GONE
-            }
-
-
         }
     }
 

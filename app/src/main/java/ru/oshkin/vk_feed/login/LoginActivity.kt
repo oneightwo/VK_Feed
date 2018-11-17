@@ -1,26 +1,23 @@
 package ru.oshkin.vk_feed.login
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
-import ru.oshkin.vk_feed.MainActivity
 import ru.oshkin.vk_feed.R
 import ru.oshkin.vk_feed.UserData
-import ru.oshkin.vk_feed.newsLine.AdapterNews
 import ru.oshkin.vk_feed.newsLine.NewsActivity
-import ru.oshkin.vk_feed.retrofit.GetNews
-import java.lang.Exception
 import java.net.URL
 import java.util.regex.Pattern
 
 class LoginActivity : AppCompatActivity() {
     private val data = UserData(this)
     override fun onCreate(savedInstanceState: Bundle?) {
+        setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
+
         setContentView(R.layout.activity_login)
 
         if (data.checkData()) {
