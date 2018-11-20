@@ -1,4 +1,4 @@
-package ru.oshkin.vk_feed.tool
+package ru.oshkin.vk_feed.tools
 
 import android.view.View
 

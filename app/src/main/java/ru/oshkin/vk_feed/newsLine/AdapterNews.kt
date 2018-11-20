@@ -2,6 +2,7 @@ package ru.oshkin.vk_feed.newsLine
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
+import android.support.v7.widget.RecyclerView.LayoutManager
 import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,7 @@ import android.widget.TextView
 import com.squareup.picasso.Picasso
 import ru.oshkin.vk_feed.R
 import ru.oshkin.vk_feed.retrofit.*
-import ru.oshkin.vk_feed.tool.setVisible
+import ru.oshkin.vk_feed.tools.setVisible
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -35,8 +36,9 @@ class AdapterNews(
         val author = getAuthor(post.sourceId) ?: return
         val sdf = SimpleDateFormat("hh:mm dd.MM.yyyy")
 
-        with(viewHolder) {
+        //initRecyclerViewImage(viewHolder, post)
 
+        with(viewHolder) {
             textNews.setVisible(post.text.isNotEmpty())
             newsImage.setVisible(post.getPhotos().isNotEmpty())
 
@@ -44,20 +46,35 @@ class AdapterNews(
             nameGroup.text = author.name()
             timePost.text = sdf.format(Date(post.date * 1000L))
 
+
             Picasso.get().load(author.photo()).into(iconGroup)
 
             visibleImageView(viewHolder, post)
         }
     }
 
+    private fun initRecyclerViewImage(viewHolder: ViewHolder, post: WallPost) {
+        with(viewHolder) {
+            recyclerViewImage.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.HORIZONTAL, false)
+            recyclerViewImage.adapter = AdapterNewsImage(post.getPhotos(), activity)
+        }
+    }
+
+
     private fun visibleImageView(viewHolder: ViewHolder, post: WallPost) {
         with(viewHolder) {
-            if (post.attachments != null && post.attachments[0].photo != null) {
+            if (post.getPhotos().size == 1) {
                 newsImage.visibility = View.VISIBLE
-                val optimalPhoto = post.attachments[0].photo!!.getOptimalPhoto()
+                recyclerViewImage.visibility = View.GONE
+                val optimalPhoto = post.getPhotos()[0].getOptimalPhoto()
                 Picasso.get().load(optimalPhoto.url).resize(displayWidth, getHeight(optimalPhoto)).into(newsImage)
+            } else if(post.getPhotos().isNotEmpty()) {
+                recyclerViewImage.visibility = View.VISIBLE
+                initRecyclerViewImage(viewHolder, post)
+                newsImage.visibility = View.GONE
             } else {
                 newsImage.visibility = View.GONE
+                recyclerViewImage.visibility = View.GONE
             }
         }
     }
@@ -112,7 +129,7 @@ class AdapterNews(
 
     override fun getItemCount() = posts.size
 
-    protected var layoutManager: RecyclerView.LayoutManager? = null
+    protected var layoutManager: LayoutManager? = null
     var isLoading: Boolean = false
         protected set
 
@@ -148,6 +165,7 @@ class AdapterNews(
         var iconGroup: ImageView = itemView.findViewById(R.id.icon_group_iv)
         var textNewsAll: TextView = itemView.findViewById(R.id.news_all_tv)
         var timePost: TextView = itemView.findViewById(R.id.time_post_group_tv)
+        var recyclerViewImage: RecyclerView = itemView.findViewById(R.id.recycler_view_image)
 
     }
 

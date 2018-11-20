@@ -7,7 +7,6 @@ import android.preference.PreferenceManager
 class UserData(context: Context) {
 
     companion object {
-
         lateinit var instance: UserData
 
         fun init(context: Context){
@@ -17,13 +16,12 @@ class UserData(context: Context) {
     private val TOKEN: String = "token"
     private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
 
-    fun saveData(token: String) {
+    fun saveToken(token: String) {
         preferences.edit().putString(TOKEN, token).apply()
     }
 
-    fun checkData(): Boolean {
-        val token = preferences.getString(TOKEN, "")
-        return token != ""
+    fun deleteToken() {
+        preferences.edit().putString(TOKEN, "").apply()
     }
 
     fun getToken(): String = preferences.getString(TOKEN, "") ?: ""

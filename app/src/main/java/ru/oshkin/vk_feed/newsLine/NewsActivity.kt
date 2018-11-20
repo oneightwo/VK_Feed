@@ -1,5 +1,5 @@
 package ru.oshkin.vk_feed.newsLine
-
+import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
 import android.support.v4.view.GravityCompat
@@ -12,9 +12,15 @@ import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import com.squareup.picasso.Picasso
 import ru.oshkin.vk_feed.R
-import ru.oshkin.vk_feed.retrofit.GetNews
+import ru.oshkin.vk_feed.UserData
+import ru.oshkin.vk_feed.login.LoginActivity
+import ru.oshkin.vk_feed.retrofit.Get
+import ru.oshkin.vk_feed.retrofit.Profile
+import ru.oshkin.vk_feed.tools.BlurTranformation
 
 
 class NewsActivity : AppCompatActivity() {
@@ -32,18 +38,19 @@ class NewsActivity : AppCompatActivity() {
 
         initRecyclerView()
         initToolbar()
-        setInfoProfile()
         initSwipeRefresh()
+        getInfoProfile()
 
-//        val toggle = ActionBarDrawerToggle(this, drawer, toolbar, R.string.app_name, R.string.app_name)
-//        drawer.addDrawerListener(toggle)
-//        toggle.syncState()
     }
 
-
-    private fun setInfoProfile() {
-        val iconProfile = drawerNV.getHeaderView(0).findViewById<ImageView>(R.id.iconProfileNav)
-        iconProfile.setImageResource(R.drawable.ic_exit_to_app_black_48dp)
+    private fun getInfoProfile() {
+        Get.getProfile {
+            if (it != null) {
+                setInfoProfile(it)
+            } else {
+                Log.e("NAME", "Error")
+            }
+        }
     }
 
     private fun initRecyclerView() {
@@ -51,7 +58,7 @@ class NewsActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
     }
-    
+
     private fun initToolbar() {
         toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)
@@ -66,7 +73,7 @@ class NewsActivity : AppCompatActivity() {
     private fun initSwipeRefresh() {
         swipeRefreshLayout = findViewById(R.id.swipe_container)
         swipeRefreshLayout.setOnRefreshListener {
-            GetNews.clear()
+            Get.clear()
             loadData()
         }
         loadData()
@@ -82,16 +89,26 @@ class NewsActivity : AppCompatActivity() {
 
     private fun selectDrawerItem(menuItem: MenuItem) {
         when (menuItem.itemId) {
-            R.id.newsNav -> Log.e("menu", "news")
+            R.id.newsNav -> {
+                Log.e("menu", "news")
+            }
             R.id.newsRecommendationsNav -> Log.e("menu", "newsRecommendationsNav")
+            R.id.profileOutNav -> {
+                Log.e("menu", "profileOutNav")
+                exitApp()
+            }
         }
         menuItem.isChecked = true
-        // Установить заголовок для action bar'а
         title = menuItem.title
-        // Закрыть navigation drawer
         drawer.closeDrawers()
     }
 
+
+    private fun exitApp() {
+        UserData.instance.deleteToken()
+        startActivity(Intent(this, LoginActivity::class.java))
+        finish()
+    }
 
     //// Действие home/up action bar'а должно открывать или закрывать drawer
     override fun onOptionsItemSelected(item: MenuItem?) =
@@ -111,8 +128,20 @@ class NewsActivity : AppCompatActivity() {
         }
     }
 
+    private fun setInfoProfile(profileList: List<Profile>) {
+        val profile = profileList[profileList.size - 1]
+        val name = profile.getName()
+        val nameProfile = drawerNV.getHeaderView(0).findViewById<TextView>(R.id.nameProfileNav)
+        val iconProfile = drawerNV.getHeaderView(0).findViewById<ImageView>(R.id.iconProfileNav)
+        val backGround = drawerNV.getHeaderView(0).findViewById<ImageView>(R.id.imageNav)
+        nameProfile.text = name
+        Picasso.get().load(profile.photo).into(iconProfile)
+        Picasso.get().load(profile.photo).transform(BlurTranformation(this)).into(backGround)
+
+    }
+
     private fun loadData() {
-        GetNews.getData {
+        Get.getData {
             if (swipeRefreshLayout.isRefreshing) adapter.clear()
             swipeRefreshLayout.isRefreshing = false
             if (it == null) {

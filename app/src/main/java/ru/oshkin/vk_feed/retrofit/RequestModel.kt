@@ -42,10 +42,9 @@ data class WallPost(
     @Expose
     val copyHistory: List<WallPost>
 ) {
-    fun getPhotos() = attachments?.filter { it.photo != null } ?: arrayListOf()
+    fun getPhotos() = attachments?.filter { it.photo != null }?.map { it.photo!! } ?: arrayListOf()
     fun isEmpty() = getPhotos().isEmpty() && text.isEmpty()
 }
-
 data class InfoGroup(
     @SerializedName("name")
     @Expose
@@ -130,6 +129,23 @@ data class Link(
     @Expose
     val ownerId: Int
 )
+
+data class Profile(
+    @SerializedName("id")
+    @Expose
+    val id: Int,
+    @SerializedName("first_name")
+    @Expose
+    val firstName: String,
+    @SerializedName("last_name")
+    @Expose
+    val lastName: String,
+    @SerializedName("photo_100")
+    @Expose
+    val photo: String
+)   {
+    fun getName() = "$firstName $lastName"
+}
 
 interface Author {
     fun name(): String

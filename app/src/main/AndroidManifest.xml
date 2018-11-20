@@ -19,6 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".newsLine.NewsActivity" android:theme="@style/AppTheme"></activity>
+        <activity android:name=".newsLine.ImageActivity"/>
+
     </application>
 
 </manifest>

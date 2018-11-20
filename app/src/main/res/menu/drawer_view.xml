@@ -16,13 +16,13 @@
     </group>
 
     <item android:title="">
-        <menu>
+        <!--<menu>-->
             <group android:checkableBehavior="single">
                 <item
                         android:id="@+id/profileOutNav"
                         android:icon="@drawable/ic_exit_to_app_black_48dp"
                         android:title="Выход"/>
             </group>
-        </menu>
+        <!--</menu>-->
     </item>
 </menu>
