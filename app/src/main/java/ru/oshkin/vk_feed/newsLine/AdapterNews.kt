@@ -109,7 +109,7 @@ class AdapterNews(
     fun add(response: FeedResponse) {
         isLoading = false
         val before = itemCount
-        posts.addAll(response.items.filter { !it.isEmpty() })
+        posts.addAll(response.items.filter { !it.isEmpty() }) //проверка
         groups.addAll(response.groups)
         profiles.addAll(response.profiles)
         notifyItemRangeInserted(before, response.items.size)
@@ -158,7 +158,7 @@ class AdapterNews(
             -1
         }
 
-    class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameGroup: TextView = itemView.findViewById(R.id.name_group_tv)
         var textNews: TextView = itemView.findViewById(R.id.news_tv)
         var newsImage: ImageView = itemView.findViewById(R.id.news_iv)
@@ -166,6 +166,13 @@ class AdapterNews(
         var textNewsAll: TextView = itemView.findViewById(R.id.news_all_tv)
         var timePost: TextView = itemView.findViewById(R.id.time_post_group_tv)
         var recyclerViewImage: RecyclerView = itemView.findViewById(R.id.recycler_view_image)
+
+        init {
+            newsImage.setOnClickListener {
+                val url = posts[adapterPosition].getPhotos()[0].getMaxPhoto().url
+                ImageActivity.outputImage(activity, url)
+            }
+        }
 
     }
 

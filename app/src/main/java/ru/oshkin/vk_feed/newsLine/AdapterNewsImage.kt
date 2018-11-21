@@ -1,6 +1,5 @@
 package ru.oshkin.vk_feed.newsLine
 
-import android.content.Intent
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -45,9 +44,7 @@ class AdapterNewsImage(photo: List<Photo>, private val activity: NewsActivity): 
         init {
             imageViewNews.setOnClickListener{
                 val url = photo[adapterPosition].getMaxPhoto().url
-                val start = Intent(activity, ImageActivity::class.java)
-                start.putExtra(KEY, url)
-                activity.startActivity(start)
+                ImageActivity.outputImage(activity, url)
             }
         }
     }
