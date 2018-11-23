@@ -86,7 +86,7 @@ class AdapterNews(
                     newsImageLinkText.text = post.getLink()!!.link?.title
                     newsImageLinkText.layoutParams.width = displayWidth
                     newsImageLinkText.layoutParams.height = getHeight(photoLink!!)
-                    Picasso.get().load(photoLink?.url).resize(displayWidth, getHeight(photoLink!!)).into(newsImage)
+                    Picasso.get().load(photoLink.url).resize(displayWidth, getHeight(photoLink)).into(newsImage)
                 }
                 else -> {
                     newsImage.visibility = View.GONE
@@ -95,21 +95,6 @@ class AdapterNews(
 
                 }
             }
-
-
-//            if (post.getPhotos().size == 1) {
-//                recyclerViewImage.visibility = View.GONE
-//                newsImage.visibility = View.VISIBLE
-//                val optimalPhoto = post.getPhotos()[0].getOptimalPhoto()
-//                Picasso.get().load(optimalPhoto.url).resize(displayWidth, getHeight(optimalPhoto)).into(newsImage)
-//            } else if(post.getPhotos().isNotEmpty()) {
-//                recyclerViewImage.visibility = View.VISIBLE
-//                initRecyclerViewImage(viewHolder, post)
-//                newsImage.visibility = View.GONE
-//            } else {
-//                newsImage.visibility = View.GONE
-//                recyclerViewImage.visibility = View.GONE
-//            }
         }
     }
 

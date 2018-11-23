@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
-
         <item
                 android:id="@+id/newsNav"
                 android:checked="true"
-                android:icon="@drawable/ic_receipt_black_48dp"
+                android:icon="@drawable/ic_web_black_24dp"
                 android:title="Новости"/>
         <item
                 android:id="@+id/newsRecommendationsNav"
-                android:icon="@drawable/ic_receipt_black_48dp"
+                android:icon="@drawable/ic_web_black_24dp"
                 android:title="Рекомендации"/>
     </group>
 
@@ -20,7 +18,7 @@
             <group android:checkableBehavior="single">
                 <item
                         android:id="@+id/profileOutNav"
-                        android:icon="@drawable/ic_exit_to_app_black_48dp"
+                        android:icon="@drawable/ic_exit_to_app"
                         android:title="Выход"/>
             </group>
         <!--</menu>-->

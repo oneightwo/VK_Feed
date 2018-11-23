@@ -12,8 +12,11 @@ object Get {
     private val retrofit by lazy { Network.retrofit }
     private var startFrom = ""
 
-    fun getData(callback: (FeedResponse?) -> Unit) {
-        retrofit.getFeed(COUNT, startFrom, UserData.instance.getToken())
+    fun getFeed(isFeed: Boolean, callback: (FeedResponse?) -> Unit) {
+        when(isFeed) {
+            true -> retrofit.getFeed(COUNT, startFrom, UserData.instance.getToken())
+            false -> retrofit.getRecommended(COUNT, UserData.instance.getToken())
+        }
             .enqueue(object : Callback<RequestModel<FeedResponse>> {
                 override fun onFailure(call: Call<RequestModel<FeedResponse>>, t: Throwable) {
                     t.printStackTrace()
@@ -33,8 +36,8 @@ object Get {
                     }
                 }
             })
-
     }
+
 
     fun getProfile(callback: (List<Profile>?) -> Unit){
         retrofit.getInfoProfile(UserData.instance.getToken())

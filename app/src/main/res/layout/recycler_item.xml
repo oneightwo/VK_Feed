@@ -6,6 +6,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        app:cardCornerRadius="10dp"
         android:orientation="horizontal">
 
 
@@ -53,7 +54,6 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="8dp"
                         android:textColor="@color/colorAccent"
-                        android:text="Тольятти"
                         android:textSize="16sp"
                         android:textStyle="bold"/>
 

@@ -1,4 +1,5 @@
 package ru.oshkin.vk_feed.newsLine
+
 import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.NavigationView
@@ -31,6 +32,7 @@ class NewsActivity : AppCompatActivity() {
     private lateinit var drawer: DrawerLayout
     private lateinit var drawerNV: NavigationView
     private lateinit var recyclerView: RecyclerView
+    private var isFeed: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,9 +92,19 @@ class NewsActivity : AppCompatActivity() {
     private fun selectDrawerItem(menuItem: MenuItem) {
         when (menuItem.itemId) {
             R.id.newsNav -> {
-                Log.e("menu", "news")
+                if (!isFeed) {
+                    isFeed = true
+                    swipeRefreshLayout.isRefreshing = true
+                    loadData()
+                }
             }
-            R.id.newsRecommendationsNav -> Log.e("menu", "newsRecommendationsNav")
+            R.id.newsRecommendationsNav -> {
+                if (isFeed) {
+                    isFeed = false
+                    swipeRefreshLayout.isRefreshing = true
+                    loadData()
+                }
+            }
             R.id.profileOutNav -> {
                 Log.e("menu", "profileOutNav")
                 exitApp()
@@ -141,7 +153,7 @@ class NewsActivity : AppCompatActivity() {
     }
 
     private fun loadData() {
-        Get.getData {
+        Get.getFeed(isFeed) {
             if (swipeRefreshLayout.isRefreshing) adapter.clear()
             swipeRefreshLayout.isRefreshing = false
             if (it == null) {
@@ -150,5 +162,6 @@ class NewsActivity : AppCompatActivity() {
                 adapter.add(it)
             }
         }
+
     }
 }

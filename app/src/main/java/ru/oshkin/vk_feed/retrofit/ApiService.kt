@@ -13,6 +13,13 @@ interface ApiService {
         @Query("access_token") accessToken: String
     ): Call<RequestModel<FeedResponse>>
 
+    @GET("newsfeed.getRecommended?v=${Network.VERSION}")
+    fun getRecommended(
+        @Query("count") count: Int,
+//        @Query("start_from") startFrom: String,
+        @Query("access_token") accessToken: String
+    ): Call<RequestModel<FeedResponse>>
+
     @GET("users.get?fields=photo_100&v=${Network.VERSION}")
     fun getInfoProfile(
         @Query("access_token") accessToken: String
