@@ -10,7 +10,7 @@ import ru.oshkin.vk_feed.R
 
 class ImageActivity: AppCompatActivity() {
 
-    val imageView by lazy { findViewById<PhotoView>(R.id.photo_view) }
+    private val imageView by lazy { findViewById<PhotoView>(R.id.photo_view) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

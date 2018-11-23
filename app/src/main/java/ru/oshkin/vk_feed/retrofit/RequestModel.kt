@@ -43,8 +43,25 @@ data class WallPost(
     val copyHistory: List<WallPost>
 ) {
     fun getPhotos() = attachments?.filter { it.photo != null }?.map { it.photo!! } ?: arrayListOf()
-    fun isEmpty() = getPhotos().isEmpty() && text.isEmpty()
+
+    fun isEmpty() = getPhotos().isEmpty() && text.isEmpty() && getLink() == null
+            || text.isNotEmpty() && getPhotos().isEmpty() && getLink() == null && (attachments?.isNotEmpty() ?: false)
+
+    fun getLink()= attachments?.find { it.link != null }
 }
+
+data class Attachments(
+    @SerializedName("type")
+    @Expose
+    val type: String,
+    @SerializedName("photo")
+    @Expose
+    val photo: Photo?,
+    @SerializedName("link")
+    @Expose
+    val link: Link?
+)
+
 data class InfoGroup(
     @SerializedName("name")
     @Expose
@@ -55,10 +72,8 @@ data class InfoGroup(
     @SerializedName("photo_200")
     @Expose
     val photo: String
-
 ) : Author {
     override fun name() = name
-
     override fun photo() = photo
 }
 
@@ -77,21 +92,8 @@ data class InfoProfile(
     val photo: String
 ) : Author {
     override fun name() = "$firstName $lastName"
-
     override fun photo() = photo
 }
-
-data class Attachments(
-    @SerializedName("type")
-    @Expose
-    val type: String,
-    @SerializedName("photo")
-    @Expose
-    val photo: Photo?,
-    @SerializedName("link")
-    @Expose
-    val link: Link?
-)
 
 data class Photo(
     @SerializedName("id")
@@ -102,7 +104,6 @@ data class Photo(
     val sizes: List<PhotoSize>
 ) {
     fun getOptimalPhoto() = sizes.filter { it.width < 900 }.sortedByDescending { it.width }[0]
-
     fun getMaxPhoto() = sizes.sortedByDescending { it.width }[0]
 }
 
@@ -122,13 +123,18 @@ data class PhotoSize(
 )
 
 data class Link(
-    @SerializedName("id")
+    @SerializedName("url")
     @Expose
-    val id: Int,
-    @SerializedName("owner_id")
+    val url: String,
+    @SerializedName("title")
     @Expose
-    val ownerId: Int
-)
+    val title: String,
+    @SerializedName("photo")
+    @Expose
+    val photo: Photo
+) {
+    fun getPhotoLink() = photo.getOptimalPhoto()
+}
 
 data class Profile(
     @SerializedName("id")
@@ -149,6 +155,5 @@ data class Profile(
 
 interface Author {
     fun name(): String
-
     fun photo(): String
 }
