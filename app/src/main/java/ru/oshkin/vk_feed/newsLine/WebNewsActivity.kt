@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import ru.oshkin.vk_feed.R
@@ -28,10 +27,10 @@ class WebNewsActivity: AppCompatActivity() {
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
             if (url == null) return
-            if (!url.startsWith(this@WebNewsActivity.url)) {
-                webNews.visibility = View.GONE
-                finish()
-            }
+//            if (!url.startsWith(this@WebNewsActivity.url)) {
+//                webNews.visibility = View.GONE
+//                finish()
+//            }
         }
     }
 

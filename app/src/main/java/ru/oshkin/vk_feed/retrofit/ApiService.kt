@@ -1,8 +1,11 @@
 package ru.oshkin.vk_feed.retrofit
 
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
+import retrofit2.http.Url
+
 
 interface ApiService {
 
@@ -24,4 +27,7 @@ interface ApiService {
     fun getInfoProfile(
         @Query("access_token") accessToken: String
     ): Call<RequestModel<List<Profile>>>
+
+    @GET
+    fun downloadFileWithDynamicUrlSync(@Url fileUrl: String): Call<ResponseBody>
 }

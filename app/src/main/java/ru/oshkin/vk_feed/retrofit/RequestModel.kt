@@ -2,6 +2,7 @@ package ru.oshkin.vk_feed.retrofit
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class RequestModel<T>(
     val response: T
@@ -47,6 +48,7 @@ data class WallPost(
     fun isEmpty() = getPhotos().isEmpty() && text.isEmpty() && getLink() == null
             || text.isNotEmpty() && getPhotos().isEmpty() && getLink() == null && (attachments?.isNotEmpty() ?: false)
 
+
     fun getLink()= attachments?.find { it.link != null }
 }
 
@@ -90,7 +92,7 @@ data class InfoProfile(
     @SerializedName("photo_100")
     @Expose
     val photo: String
-) : Author {
+) : Author, Serializable {
     override fun name() = "$firstName $lastName"
     override fun photo() = photo
 }
@@ -131,9 +133,9 @@ data class Link(
     val title: String,
     @SerializedName("photo")
     @Expose
-    val photo: Photo
+    val photo: Photo?
 ) {
-    fun getPhotoLink() = photo.getOptimalPhoto()
+    fun getPhotoLink() = photo?.getOptimalPhoto()
 }
 
 data class Profile(

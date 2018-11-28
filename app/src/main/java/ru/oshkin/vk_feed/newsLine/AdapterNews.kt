@@ -1,5 +1,6 @@
 package ru.oshkin.vk_feed.newsLine
 
+import android.graphics.drawable.Drawable
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.LayoutManager
@@ -63,8 +64,19 @@ class AdapterNews(
 
     private fun visibleView(viewHolder: ViewHolder, post: WallPost) {
         with(viewHolder) {
-
             when {
+                post.getLink() != null && post.getPhotos().size == 1 -> {
+                    val photoLink = post.getLink()!!.link?.getPhotoLink()
+                    newsImage.visibility = View.VISIBLE
+                    recyclerViewImage.visibility = View.GONE
+                    newsImageLinkText.visibility = View.VISIBLE
+                    newsImageLinkText.text = post.getLink()!!.link?.title
+                    newsImageLinkText.layoutParams.width = displayWidth
+                    val optimalPhoto = post.getPhotos()[0].getOptimalPhoto()
+                    newsImageLinkText.layoutParams.height = getHeight(optimalPhoto)
+                    Picasso.get().load(optimalPhoto.url).resize(displayWidth, getHeight(optimalPhoto)).into(newsImage)
+
+                }
                 post.getPhotos().size == 1 -> {
                     newsImage.visibility = View.VISIBLE
                     recyclerViewImage.visibility = View.GONE
@@ -85,8 +97,18 @@ class AdapterNews(
                     newsImageLinkText.visibility = View.VISIBLE
                     newsImageLinkText.text = post.getLink()!!.link?.title
                     newsImageLinkText.layoutParams.width = displayWidth
-                    newsImageLinkText.layoutParams.height = getHeight(photoLink!!)
-                    Picasso.get().load(photoLink.url).resize(displayWidth, getHeight(photoLink)).into(newsImage)
+                    if (photoLink != null) {
+                        newsImageLinkText.layoutParams.height = getHeight(photoLink)
+                        Picasso.get().load(photoLink.url).resize(displayWidth, getHeight(photoLink)).into(newsImage)
+                    } else {
+                        newsImage.setImageResource(R.drawable.blue)
+                        val height = getHeightLink(newsImage.drawable)
+                       // Log.e("d", "${d}")
+
+                        newsImageLinkText.layoutParams.height = height
+                        //Picasso.get().load(R.drawable.blue).resize(displayWidth, height).into(newsImage)
+
+                    }
                 }
                 else -> {
                     newsImage.visibility = View.GONE
@@ -119,6 +141,9 @@ class AdapterNews(
 
     private fun getHeight(photoSize: PhotoSize) =
         (photoSize.height * (displayWidth.toDouble() / photoSize.width)).toInt()
+
+    private fun getHeightLink(d: Drawable) =
+        (d.intrinsicHeight * (displayWidth.toDouble() / d.intrinsicWidth)).toInt()
 
     fun clear() {
         posts.clear()
