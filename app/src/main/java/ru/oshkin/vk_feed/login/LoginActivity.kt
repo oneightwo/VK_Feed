@@ -8,9 +8,11 @@ import android.webkit.CookieManager
 import android.webkit.CookieSyncManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import ru.oshkin.vk_feed.R
 import ru.oshkin.vk_feed.UserData
 import ru.oshkin.vk_feed.newsLine.NewsActivity
+import ru.oshkin.vk_feed.tools.isOnline
 import java.net.URL
 import java.util.regex.Pattern
 
@@ -24,17 +26,23 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         webView = findViewById(R.id.login_wv)
+    }
 
+    override fun onResume() {
+        super.onResume()
         if (data.getToken().isNotEmpty()) {
             startActivity(Intent(this, NewsActivity::class.java))
             finish()
-        } else {
+        } else if (isOnline(this)){
             val url = URL("https://oauth.vk.com/authorize?client_id=6734151&display=mobile&redirect_uri=https://oauth.vk.com/blank.html&scope=notify,friends,photos,pages,notes,messages,wall,offline,groups&response_type=token&v=5.87&state=123456")
             webView.loadUrl(url.toString())
             webView.webViewClient = ParsingWebClient()
+        } else {
+            startActivityForResult(Intent(android.provider.Settings.ACTION_SETTINGS), 0)
+            Toast.makeText(this, "Включите Интернет", Toast.LENGTH_LONG).show()
         }
-    }
 
+    }
 
     fun doneWithThis(url: String) {
         val token = extract(url, "access_token=(.*?)&")

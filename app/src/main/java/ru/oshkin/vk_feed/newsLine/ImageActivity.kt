@@ -3,8 +3,10 @@ package ru.oshkin.vk_feed.newsLine
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
+import android.media.Image
 import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
 import android.widget.ImageView
@@ -14,11 +16,21 @@ import com.squareup.picasso.Picasso
 import ru.oshkin.vk_feed.R
 import ru.oshkin.vk_feed.retrofit.Get
 import ru.oshkin.vk_feed.tools.toggle
+import android.os.Environment.getExternalStorageDirectory
+import android.util.Log
+import android.widget.LinearLayout
+import android.os.StrictMode
+import android.os.Build
+
+
+
 
 class ImageActivity : AppCompatActivity() {
 
     private val imageView by lazy { findViewById<PhotoView>(R.id.photo_view) }
     private val saveImage by lazy { findViewById<ImageView>(R.id.saveImage) }
+    private val shareImage by lazy { findViewById<ImageView>(R.id.share_in_image_iv) }
+    private val linerLayout by lazy { findViewById<LinearLayout>(R.id.share_save_ll) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,18 +45,27 @@ class ImageActivity : AppCompatActivity() {
         Picasso.get().load(url).into(imageView)
 
         imageView.setOnPhotoTapListener { _, _, _ ->
-            saveImage.toggle()
+            linerLayout.toggle()
         }
 
         saveImage.setOnClickListener {
             Get.saveImage(url) {
                 if (it != null) {
-                    Toast.makeText(this, "SAVE", Toast.LENGTH_SHORT).show()
-                    addToGallery(this, url)
+                    Toast.makeText(this, "Сохранено", Toast.LENGTH_SHORT).show()
+                    addToGallery(this, it)
                 } else {
                     Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show()
                 }
 
+            }
+        }
+        
+        shareImage.setOnClickListener {
+            //var uri: Uri = 
+            Get.saveImage(url) {
+               val uri = Uri.parse("file://" + it)
+                Log.e("one", uri.toString())
+                imageShare(uri)
             }
         }
 
@@ -58,7 +79,25 @@ class ImageActivity : AppCompatActivity() {
         }
     }
 
-    fun addToGallery(context: Context, path: String) {
+    private fun imageShare(uri: Uri) {
+        val shareIntent: Intent = Intent().apply {
+            if (Build.VERSION.SDK_INT >= 24) {
+                try {
+                    val m = StrictMode::class.java.getMethod("disableDeathOnFileUriExposure")
+                    m.invoke(null)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_STREAM, uri)
+            setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            type = "image/jpeg"
+        }
+        startActivity(Intent.createChooser(shareIntent, "Калтинка"))
+    }
+
+    private fun addToGallery(context: Context, path: String) {
         try {
             val cv = ContentValues().apply {
                 put(MediaStore.Images.Media.TITLE, context.getString(R.string.app_name))
@@ -70,7 +109,6 @@ class ImageActivity : AppCompatActivity() {
             context.contentResolver.notifyChange(Uri.parse("file://" + path), null)
         } catch (e: SecurityException) {
             e.printStackTrace()
-            Toast.makeText(this, "ERROR ADD TO GALLERY", Toast.LENGTH_SHORT).show()
         }
     }
 

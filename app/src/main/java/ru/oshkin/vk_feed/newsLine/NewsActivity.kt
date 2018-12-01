@@ -7,6 +7,7 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -15,24 +16,29 @@ import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import ru.oshkin.vk_feed.R
 import ru.oshkin.vk_feed.UserData
 import ru.oshkin.vk_feed.login.LoginActivity
+import ru.oshkin.vk_feed.retrofit.FeedResponse
 import ru.oshkin.vk_feed.retrofit.Get
 import ru.oshkin.vk_feed.retrofit.Profile
 import ru.oshkin.vk_feed.tools.BlurTranformation
+import ru.oshkin.vk_feed.tools.CacheManager
 
 
 class NewsActivity : AppCompatActivity() {
 
     private val adapter by lazy { AdapterNews(this, ::loadData) }
+    private val cacheManager by lazy { CacheManager(this) }
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var toolbar: Toolbar
     private lateinit var drawer: DrawerLayout
     private lateinit var drawerNV: NavigationView
     private lateinit var recyclerView: RecyclerView
     private var isFeed: Boolean = true
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +55,9 @@ class NewsActivity : AppCompatActivity() {
         Get.getProfile {
             if (it != null) {
                 setInfoProfile(it)
+                cacheManager.saveProfile(it)
             } else {
+                setInfoProfile(cacheManager.getProfile())
                 Log.e("NAME", "Error")
             }
         }
@@ -140,8 +148,7 @@ class NewsActivity : AppCompatActivity() {
         }
     }
 
-    private fun setInfoProfile(profileList: List<Profile>) {
-        val profile = profileList[profileList.size - 1]
+    private fun setInfoProfile(profile: Profile) {
         val name = profile.getName()
         val nameProfile = drawerNV.getHeaderView(0).findViewById<TextView>(R.id.nameProfileNav)
         val iconProfile = drawerNV.getHeaderView(0).findViewById<ImageView>(R.id.iconProfileNav)
@@ -149,7 +156,6 @@ class NewsActivity : AppCompatActivity() {
         nameProfile.text = name
         Picasso.get().load(profile.photo).into(iconProfile)
         Picasso.get().load(profile.photo).transform(BlurTranformation(this)).into(backGround)
-
     }
 
     private fun loadData() {
@@ -157,8 +163,15 @@ class NewsActivity : AppCompatActivity() {
             if (swipeRefreshLayout.isRefreshing) adapter.clear()
             swipeRefreshLayout.isRefreshing = false
             if (it == null) {
-                Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
+                val data = cacheManager.getFeed(isFeed)
+                if (data != null) {
+                    adapter.add(data)
+                    Toast.makeText(this, R.string.error_download, Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this, R.string.error_cache, Toast.LENGTH_SHORT).show()
+                }
             } else {
+                cacheManager.saveFeed(it, isFeed)
                 adapter.add(it)
             }
         }

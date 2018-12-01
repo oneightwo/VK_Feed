@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Новости</string>
+    <string name="error_download">Ошибка загрузки</string>
+    <string name="error_cache">Ошибка загрузки из КЕША</string>
 </resources>

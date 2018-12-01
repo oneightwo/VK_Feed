@@ -3,6 +3,8 @@
           package="ru.oshkin.vk_feed">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
 
     <application
             android:name=".App"
@@ -22,6 +24,7 @@
         <activity android:name=".newsLine.NewsActivity" android:theme="@style/AppTheme"></activity>
         <activity android:name=".newsLine.ImageActivity"/>
         <activity android:name=".newsLine.WebNewsActivity"/>
+
 
     </application>
 

@@ -1,6 +1,9 @@
 package ru.oshkin.vk_feed.retrofit
 
+import android.os.Environment
 import android.util.Log
+import com.google.gson.GsonBuilder
+import com.google.gson.reflect.TypeToken
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
@@ -9,6 +12,7 @@ import ru.oshkin.vk_feed.UserData
 import ru.oshkin.vk_feed.tools.CacheManager
 import ru.oshkin.vk_feed.tools.getNameFile
 import ru.oshkin.vk_feed.tools.writeResponseBodyToDisk
+import java.io.File
 
 
 object Get {
@@ -47,7 +51,7 @@ object Get {
     }
 
 
-    fun getProfile(callback: (List<Profile>?) -> Unit) {
+    fun getProfile(callback: (Profile?) -> Unit) {
         retrofit.getInfoProfile(UserData.instance.getToken())
             .enqueue(object : Callback<RequestModel<List<Profile>>> {
                 override fun onFailure(call: Call<RequestModel<List<Profile>>>, t: Throwable) {
@@ -61,7 +65,7 @@ object Get {
                 ) {
                     val profile = response.body()?.response
                     if (profile != null) {
-                        callback(profile)
+                        callback(profile[0])
                     } else {
                         onFailure(call, Throwable())
                     }
@@ -78,8 +82,12 @@ object Get {
 
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     val namePicture = getNameFile(url)
-                    if (response.isSuccessful && writeResponseBodyToDisk(namePicture, response.body())) {
-                        callback.invoke(namePicture)
+                    val file = File(
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+                        namePicture
+                    )
+                    if (response.isSuccessful && writeResponseBodyToDisk(file, response.body())) {
+                        callback.invoke(file.absolutePath)
 
                     } else {
                         callback.invoke(null)

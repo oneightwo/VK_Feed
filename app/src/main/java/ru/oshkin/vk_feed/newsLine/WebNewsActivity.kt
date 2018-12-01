@@ -19,10 +19,12 @@ class WebNewsActivity: AppCompatActivity() {
         setContentView(R.layout.activity_web_news)
         url = intent.extras.getString(AdapterNews.WEB) ?: return
         webNews.webViewClient = ExitWebClient()
+        WebView.setWebContentsDebuggingEnabled(false)
+        webNews.settings.javaScriptEnabled = true
         webNews.loadUrl(url)
     }
 
-    private inner class ExitWebClient : WebViewClient() {
+        private inner class ExitWebClient : WebViewClient() {
 
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)

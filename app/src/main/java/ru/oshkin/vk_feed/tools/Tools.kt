@@ -1,9 +1,13 @@
 package ru.oshkin.vk_feed.tools
 
+import android.content.Context
 import android.os.Environment
 import android.view.View
 import okhttp3.ResponseBody
 import java.io.*
+import android.net.ConnectivityManager
+
+
 
 
 fun View.setVisible(visible: Boolean) {
@@ -14,9 +18,8 @@ fun View.isVisible() = visibility == View.VISIBLE
 
 fun View.toggle() = setVisible(!isVisible())
 
-fun writeResponseBodyToDisk(fileName: String, body: ResponseBody?): Boolean {
+fun writeResponseBodyToDisk(file: File, body: ResponseBody?): Boolean {
     try {
-        val futureStudioIconFile = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), fileName)
 
         var inputStream: InputStream? = null
         var outputStream: OutputStream? = null
@@ -28,7 +31,7 @@ fun writeResponseBodyToDisk(fileName: String, body: ResponseBody?): Boolean {
             var fileSizeDownloaded: Long = 0
 
             inputStream = body?.byteStream()
-            outputStream = FileOutputStream(futureStudioIconFile)
+            outputStream = FileOutputStream(file)
 
             while (true) {
                 val read = inputStream!!.read(fileReader)
@@ -64,3 +67,9 @@ fun writeResponseBodyToDisk(fileName: String, body: ResponseBody?): Boolean {
 }
 
 fun getNameFile(url: String) = url.split("/").last()
+
+fun isOnline(context: Context): Boolean {
+    val cm = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager?
+    val netInfo = cm!!.activeNetworkInfo
+    return netInfo != null && netInfo.isConnectedOrConnecting
+}

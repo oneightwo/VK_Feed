@@ -1,5 +1,6 @@
 package ru.oshkin.vk_feed.newsLine
 
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
@@ -16,6 +17,10 @@ import ru.oshkin.vk_feed.retrofit.*
 import ru.oshkin.vk_feed.tools.setVisible
 import java.text.SimpleDateFormat
 import java.util.*
+import android.support.v7.widget.CardView
+import android.widget.Toast
+import java.lang.StringBuilder
+
 
 class AdapterNews(
     private val activity: NewsActivity,
@@ -35,7 +40,7 @@ class AdapterNews(
 
         val post = posts[position]
         val author = getAuthor(post.sourceId) ?: return
-        val sdf = SimpleDateFormat("hh:mm dd.MM.yyyy")
+        val sdf = SimpleDateFormat("HH:mm dd.MM.yyyy")
 
         //initRecyclerViewImage(viewHolder, post)
 
@@ -46,7 +51,6 @@ class AdapterNews(
             setAllText(viewHolder, post)
             nameGroup.text = author.name()
             timePost.text = sdf.format(Date(post.date * 1000L))
-
 
             Picasso.get().load(author.photo()).into(iconGroup)
 
@@ -103,7 +107,7 @@ class AdapterNews(
                     } else {
                         newsImage.setImageResource(R.drawable.blue)
                         val height = getHeightLink(newsImage.drawable)
-                       // Log.e("d", "${d}")
+                        // Log.e("d", "${d}")
 
                         newsImageLinkText.layoutParams.height = height
                         //Picasso.get().load(R.drawable.blue).resize(displayWidth, height).into(newsImage)
@@ -202,6 +206,7 @@ class AdapterNews(
             -1
         }
 
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameGroup: TextView = itemView.findViewById(R.id.name_group_tv)
         val textNews: TextView = itemView.findViewById(R.id.news_tv)
@@ -211,6 +216,8 @@ class AdapterNews(
         val timePost: TextView = itemView.findViewById(R.id.time_post_group_tv)
         val recyclerViewImage: RecyclerView = itemView.findViewById(R.id.recycler_view_image)
         val newsImageLinkText: TextView = itemView.findViewById(R.id.news_textLink)
+        val shareImageView: ImageView = itemView.findViewById(R.id.share_iv)
+        val itemCardView: CardView = itemView.findViewById(R.id.itemCardView)
 
         init {
             newsImage.setOnClickListener {
@@ -218,11 +225,29 @@ class AdapterNews(
                 ImageActivity.outputImage(activity, url)
             }
             newsImageLinkText.setOnClickListener {
-                val url = posts[adapterPosition].getLink()?.link?.url!!
-                WebNewsActivity.startActivity(activity, url)
+                val url = posts[adapterPosition].getLink()?.link?.url
+                if (url != null) {
+                    WebNewsActivity.startActivity(activity, url)
+                } else {
+                    Toast.makeText(activity, "Ошибка ссылки", Toast.LENGTH_SHORT).show()
+                }
+            }
+            shareImageView.setOnClickListener {
+                val shareIntent = Intent(Intent.ACTION_SEND)
+                shareIntent.type = "text/plain"
+                    shareIntent.putExtra(Intent.EXTRA_TEXT,  getLinkShare(adapterPosition))
+                activity.startActivity(Intent.createChooser(shareIntent, "Share link using"))
             }
         }
 
+    }
+
+    fun getLinkShare(adapterPosition: Int): String {
+//        url = "https://vk.com/wall" + wallPost.sourceId + "_" + wallPost.postId
+        val post = posts[adapterPosition]
+        val url = StringBuilder()
+        url.append("https://vk.com/wall", post.sourceId, "_", post.postId)
+        return url.toString()
     }
 
 
