@@ -13,14 +13,12 @@ class BlurTranformation(private val context: Context) : Transformation {
     companion object {
         const val BITMAP_SCALE = 0.4f
         const val BLUR_RADIUS = 3f
-
         const val KEY = "Blur"
     }
 
     override fun key() = KEY
 
     override fun transform(image: Bitmap): Bitmap {
-
         val width = Math.round(image.width * BITMAP_SCALE)
         val height = Math.round(image.height * BITMAP_SCALE)
 

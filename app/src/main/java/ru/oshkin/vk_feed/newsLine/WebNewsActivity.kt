@@ -29,10 +29,6 @@ class WebNewsActivity: AppCompatActivity() {
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
             if (url == null) return
-//            if (!url.startsWith(this@WebNewsActivity.url)) {
-//                webNews.visibility = View.GONE
-//                finish()
-//            }
         }
     }
 

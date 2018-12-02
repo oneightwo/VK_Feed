@@ -1,11 +1,10 @@
-package ru.oshkin.vk_feed
+package ru.oshkin.vk_feed.tools
 
 import android.content.Context
 import android.preference.PreferenceManager
 
 
 class UserData(context: Context) {
-
     companion object {
         lateinit var instance: UserData
 
@@ -13,6 +12,7 @@ class UserData(context: Context) {
             instance = UserData(context)
         }
     }
+
     private val TOKEN: String = "token"
     private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
 

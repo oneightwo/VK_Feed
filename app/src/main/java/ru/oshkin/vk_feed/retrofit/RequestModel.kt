@@ -2,7 +2,6 @@ package ru.oshkin.vk_feed.retrofit
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
-import java.io.Serializable
 
 data class RequestModel<T>(
     val response: T
@@ -92,7 +91,7 @@ data class InfoProfile(
     @SerializedName("photo_100")
     @Expose
     val photo: String
-) : Author, Serializable {
+) : Author {
     override fun name() = "$firstName $lastName"
     override fun photo() = photo
 }

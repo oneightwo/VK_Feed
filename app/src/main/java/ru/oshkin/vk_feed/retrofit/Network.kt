@@ -1,6 +1,5 @@
 package ru.oshkin.vk_feed.retrofit
 
-import android.os.Build
 import com.google.gson.Gson
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor

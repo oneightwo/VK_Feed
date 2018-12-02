@@ -3,26 +3,20 @@ package ru.oshkin.vk_feed.newsLine
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
-import android.media.Image
 import android.net.Uri
 import android.os.Bundle
-import android.os.Environment
 import android.provider.MediaStore
 import android.support.v7.app.AppCompatActivity
 import android.widget.ImageView
-import android.widget.Toast
 import com.github.chrisbanes.photoview.PhotoView
 import com.squareup.picasso.Picasso
 import ru.oshkin.vk_feed.R
 import ru.oshkin.vk_feed.retrofit.Get
 import ru.oshkin.vk_feed.tools.toggle
-import android.os.Environment.getExternalStorageDirectory
-import android.util.Log
 import android.widget.LinearLayout
 import android.os.StrictMode
 import android.os.Build
-
-
+import ru.oshkin.vk_feed.tools.setToast
 
 
 class ImageActivity : AppCompatActivity() {
@@ -51,24 +45,20 @@ class ImageActivity : AppCompatActivity() {
         saveImage.setOnClickListener {
             Get.saveImage(url) {
                 if (it != null) {
-                    Toast.makeText(this, "Сохранено", Toast.LENGTH_SHORT).show()
+                    setToast(this, getString(R.string.saved))
                     addToGallery(this, it)
                 } else {
-                    Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show()
+                    setToast(this, getString(R.string.error))
                 }
-
             }
         }
         
         shareImage.setOnClickListener {
-            //var uri: Uri = 
             Get.saveImage(url) {
                val uri = Uri.parse("file://" + it)
-                Log.e("one", uri.toString())
                 imageShare(uri)
             }
         }
-
 
         imageView.setOnSingleFlingListener { e1, e2, velocityX, velocityY ->
             if (Math.abs(e2.y - e1.y) > FLING_SIZE) {
@@ -91,10 +81,10 @@ class ImageActivity : AppCompatActivity() {
             }
             action = Intent.ACTION_SEND
             putExtra(Intent.EXTRA_STREAM, uri)
-            setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
             type = "image/jpeg"
         }
-        startActivity(Intent.createChooser(shareIntent, "Калтинка"))
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_image)))
     }
 
     private fun addToGallery(context: Context, path: String) {
@@ -118,8 +108,6 @@ class ImageActivity : AppCompatActivity() {
             start.putExtra(AdapterNewsImage.KEY, url)
             context.startActivity(start)
         }
-
         const val FLING_SIZE = 200
     }
-
 }

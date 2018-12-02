@@ -2,7 +2,8 @@
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@android:color/black">
 
     <ProgressBar
@@ -14,6 +15,7 @@
             android:id="@+id/photo_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
     <LinearLayout
             android:id="@+id/share_save_ll"
             android:layout_width="match_parent"
@@ -23,7 +25,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginEnd="10dp"
             android:layout_marginStart="10dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
         <android.support.v7.widget.CardView
                 android:layout_width="match_parent"
@@ -40,8 +42,9 @@
 
             <ImageView
                     android:id="@+id/saveImage"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_file_download"/>
 
@@ -62,13 +65,13 @@
 
             <ImageView
                     android:id="@+id/share_in_image_iv"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="10dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_share"/>
 
         </android.support.v7.widget.CardView>
-
 
     </LinearLayout>
 </RelativeLayout>

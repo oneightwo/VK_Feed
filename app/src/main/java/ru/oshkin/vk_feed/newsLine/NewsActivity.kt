@@ -7,7 +7,6 @@ import android.support.v4.view.GravityCompat
 import android.support.v4.widget.DrawerLayout
 import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.CardView
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
@@ -15,17 +14,15 @@ import android.util.Log
 import android.view.MenuItem
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import com.google.gson.Gson
 import com.squareup.picasso.Picasso
 import ru.oshkin.vk_feed.R
-import ru.oshkin.vk_feed.UserData
+import ru.oshkin.vk_feed.tools.UserData
 import ru.oshkin.vk_feed.login.LoginActivity
-import ru.oshkin.vk_feed.retrofit.FeedResponse
 import ru.oshkin.vk_feed.retrofit.Get
 import ru.oshkin.vk_feed.retrofit.Profile
 import ru.oshkin.vk_feed.tools.BlurTranformation
 import ru.oshkin.vk_feed.tools.CacheManager
+import ru.oshkin.vk_feed.tools.setToast
 
 
 class NewsActivity : AppCompatActivity() {
@@ -58,7 +55,6 @@ class NewsActivity : AppCompatActivity() {
                 cacheManager.saveProfile(it)
             } else {
                 setInfoProfile(cacheManager.getProfile())
-                Log.e("NAME", "Error")
             }
         }
     }
@@ -166,9 +162,9 @@ class NewsActivity : AppCompatActivity() {
                 val data = cacheManager.getFeed(isFeed)
                 if (data != null) {
                     adapter.add(data)
-                    Toast.makeText(this, R.string.error_download, Toast.LENGTH_SHORT).show()
+                    setToast(this, getString(R.string.error_download))
                 } else {
-                    Toast.makeText(this, R.string.error_cache, Toast.LENGTH_SHORT).show()
+                    setToast(this, getString(R.string.error_cache))
                 }
             } else {
                 cacheManager.saveFeed(it, isFeed)

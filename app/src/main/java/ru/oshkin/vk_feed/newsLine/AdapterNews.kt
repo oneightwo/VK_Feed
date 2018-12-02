@@ -18,8 +18,7 @@ import ru.oshkin.vk_feed.tools.setVisible
 import java.text.SimpleDateFormat
 import java.util.*
 import android.support.v7.widget.CardView
-import android.widget.Toast
-import java.lang.StringBuilder
+import ru.oshkin.vk_feed.tools.setToast
 
 
 class AdapterNews(
@@ -37,12 +36,9 @@ class AdapterNews(
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-
         val post = posts[position]
         val author = getAuthor(post.sourceId) ?: return
         val sdf = SimpleDateFormat("HH:mm dd.MM.yyyy")
-
-        //initRecyclerViewImage(viewHolder, post)
 
         with(viewHolder) {
             textNews.setVisible(post.text.isNotEmpty())
@@ -65,41 +61,44 @@ class AdapterNews(
         }
     }
 
-
     private fun visibleView(viewHolder: ViewHolder, post: WallPost) {
         with(viewHolder) {
             when {
                 post.getLink() != null && post.getPhotos().size == 1 -> {
-                    val photoLink = post.getLink()!!.link?.getPhotoLink()
-                    newsImage.visibility = View.VISIBLE
-                    recyclerViewImage.visibility = View.GONE
-                    newsImageLinkText.visibility = View.VISIBLE
-                    newsImageLinkText.text = post.getLink()!!.link?.title
+                    newsImage.setVisible(true)
+                    recyclerViewImage.setVisible(false)
+                    newsImageLinkText.setVisible(true)
+                    val linkTitle = post.getLink()!!.link?.title
+                    if (linkTitle != null) {
+                        newsImageLinkText.text = linkTitle
+                    }
                     newsImageLinkText.layoutParams.width = displayWidth
                     val optimalPhoto = post.getPhotos()[0].getOptimalPhoto()
                     newsImageLinkText.layoutParams.height = getHeight(optimalPhoto)
                     Picasso.get().load(optimalPhoto.url).resize(displayWidth, getHeight(optimalPhoto)).into(newsImage)
-
                 }
                 post.getPhotos().size == 1 -> {
-                    newsImage.visibility = View.VISIBLE
-                    recyclerViewImage.visibility = View.GONE
-                    newsImageLinkText.visibility = View.GONE
+                    newsImage.setVisible(true)
+                    recyclerViewImage.setVisible(false)
+                    newsImageLinkText.setVisible(false)
                     val optimalPhoto = post.getPhotos()[0].getOptimalPhoto()
                     Picasso.get().load(optimalPhoto.url).resize(displayWidth, getHeight(optimalPhoto)).into(newsImage)
                 }
                 post.getPhotos().isNotEmpty() -> {
-                    recyclerViewImage.visibility = View.VISIBLE
-                    newsImageLinkText.visibility = View.GONE
+                    recyclerViewImage.setVisible(true)
+                    newsImageLinkText.setVisible(false)
                     initRecyclerViewImage(viewHolder, post)
-                    newsImage.visibility = View.GONE
+                    newsImage.setVisible(false)
                 }
                 post.getLink() != null -> {
                     val photoLink = post.getLink()!!.link?.getPhotoLink()
-                    newsImage.visibility = View.VISIBLE
-                    recyclerViewImage.visibility = View.GONE
-                    newsImageLinkText.visibility = View.VISIBLE
-                    newsImageLinkText.text = post.getLink()!!.link?.title
+                    val linkTitle = post.getLink()!!.link?.title
+                    newsImage.setVisible(true)
+                    recyclerViewImage.setVisible(false)
+                    newsImageLinkText.setVisible(true)
+                    if (linkTitle != null) {
+                        newsImageLinkText.text = linkTitle
+                    }
                     newsImageLinkText.layoutParams.width = displayWidth
                     if (photoLink != null) {
                         newsImageLinkText.layoutParams.height = getHeight(photoLink)
@@ -107,18 +106,13 @@ class AdapterNews(
                     } else {
                         newsImage.setImageResource(R.drawable.blue)
                         val height = getHeightLink(newsImage.drawable)
-                        // Log.e("d", "${d}")
-
                         newsImageLinkText.layoutParams.height = height
-                        //Picasso.get().load(R.drawable.blue).resize(displayWidth, height).into(newsImage)
-
                     }
                 }
                 else -> {
-                    newsImage.visibility = View.GONE
-                    recyclerViewImage.visibility = View.GONE
-                    newsImageLinkText.visibility = View.GONE
-
+                    newsImage.setVisible(false)
+                    recyclerViewImage.setVisible(false)
+                    newsImageLinkText.setVisible(false)
                 }
             }
         }
@@ -128,20 +122,18 @@ class AdapterNews(
         with(viewHolder) {
             val postText = post.text
             if (postText.length > 400) {
-                textNewsAll.visibility = View.VISIBLE
-                textNews.text = postText.substring(0, 400) + "..."
+                textNewsAll.setVisible(true)
+                textNews.text = postText.substring(0, 400) + activity.getString(R.string.ellipsis)
             } else {
-                textNewsAll.visibility = View.GONE
+                textNewsAll.setVisible(false)
                 textNews.text = postText
             }
-
             textNewsAll.setOnClickListener {
                 textNews.text = postText
-                textNewsAll.visibility = View.GONE
+                textNewsAll.setVisible(false)
             }
         }
     }
-
 
     private fun getHeight(photoSize: PhotoSize) =
         (photoSize.height * (displayWidth.toDouble() / photoSize.width)).toInt()
@@ -168,7 +160,6 @@ class AdapterNews(
     } else {
         groups.find { it.id == -id }
     }
-
 
     override fun onCreateViewHolder(viewHolder: ViewGroup, p1: Int): AdapterNews.ViewHolder {
         val itemView = LayoutInflater.from(viewHolder.context).inflate(R.layout.recycler_item, viewHolder, false)
@@ -206,7 +197,6 @@ class AdapterNews(
             -1
         }
 
-
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val nameGroup: TextView = itemView.findViewById(R.id.name_group_tv)
         val textNews: TextView = itemView.findViewById(R.id.news_tv)
@@ -229,27 +219,22 @@ class AdapterNews(
                 if (url != null) {
                     WebNewsActivity.startActivity(activity, url)
                 } else {
-                    Toast.makeText(activity, "Ошибка ссылки", Toast.LENGTH_SHORT).show()
+                    setToast(activity, activity.getString(R.string.error_link))
                 }
             }
             shareImageView.setOnClickListener {
                 val shareIntent = Intent(Intent.ACTION_SEND)
                 shareIntent.type = "text/plain"
-                    shareIntent.putExtra(Intent.EXTRA_TEXT,  getLinkShare(adapterPosition))
-                activity.startActivity(Intent.createChooser(shareIntent, "Share link using"))
+                shareIntent.putExtra(Intent.EXTRA_TEXT, getLinkShare(adapterPosition))
+                activity.startActivity(Intent.createChooser(shareIntent, activity.getString(R.string.share_link)))
             }
         }
-
     }
 
     fun getLinkShare(adapterPosition: Int): String {
-//        url = "https://vk.com/wall" + wallPost.sourceId + "_" + wallPost.postId
         val post = posts[adapterPosition]
-        val url = StringBuilder()
-        url.append("https://vk.com/wall", post.sourceId, "_", post.postId)
-        return url.toString()
+        return "https://vk.com/wall${post.sourceId}_${post.postId}"
     }
-
 
     companion object {
         const val WEB = "web"

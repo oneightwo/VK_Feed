@@ -1,7 +1,6 @@
-package ru.oshkin.vk_feed
+package ru.oshkin.vk_feed.tools
 
 import android.app.Application
-import ru.oshkin.vk_feed.tools.CacheManager
 
 class App : Application() {
     override fun onCreate() {

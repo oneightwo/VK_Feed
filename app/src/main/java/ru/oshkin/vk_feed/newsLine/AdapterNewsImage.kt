@@ -26,11 +26,9 @@ class AdapterNewsImage(photo: List<Photo>, private val activity: NewsActivity): 
     override fun onBindViewHolder(imageViewHolder: ImageViewHolder, position: Int) {
         val optimalPhoto = photo[position].getOptimalPhoto()
         val width = getWidth(optimalPhoto)
-//        val h = imageViewHolder.cardView.
         with(imageViewHolder) {
             cardView.layoutParams.width = width
             Picasso.get().load(optimalPhoto.url).resize(width, cardHeight).into(imageViewHolder.imageViewNews)
-
         }
     }
 
@@ -48,6 +46,7 @@ class AdapterNewsImage(photo: List<Photo>, private val activity: NewsActivity): 
             }
         }
     }
+
     companion object {
         const val KEY = "image"
     }

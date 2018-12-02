@@ -2,4 +2,11 @@
     <string name="app_name">Новости</string>
     <string name="error_download">Ошибка загрузки</string>
     <string name="error_cache">Ошибка загрузки из КЕША</string>
+    <string name="share_image">Поделиться изображением:</string>
+    <string name="on_internet">Включите Интернет</string>
+    <string name="ellipsis">...</string>
+    <string name="error_link">Ошибка ссылки</string>
+    <string name="share_link">Поделиться ссылкой:</string>
+    <string name="saved">Сохранено</string>
+    <string name="error">Ошибка</string>
 </resources>

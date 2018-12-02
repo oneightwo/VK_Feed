@@ -3,16 +3,17 @@ package ru.oshkin.vk_feed.login
 import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.view.View
 import android.webkit.CookieManager
 import android.webkit.CookieSyncManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import ru.oshkin.vk_feed.R
-import ru.oshkin.vk_feed.UserData
+import ru.oshkin.vk_feed.tools.UserData
 import ru.oshkin.vk_feed.newsLine.NewsActivity
 import ru.oshkin.vk_feed.tools.isOnline
+import ru.oshkin.vk_feed.tools.setToast
+import ru.oshkin.vk_feed.tools.setVisible
 import java.net.URL
 import java.util.regex.Pattern
 
@@ -39,15 +40,13 @@ class LoginActivity : AppCompatActivity() {
             webView.webViewClient = ParsingWebClient()
         } else {
             startActivityForResult(Intent(android.provider.Settings.ACTION_SETTINGS), 0)
-            Toast.makeText(this, "Включите Интернет", Toast.LENGTH_LONG).show()
+            setToast(this, getString(R.string.on_internet))
         }
-
     }
 
     fun doneWithThis(url: String) {
         val token = extract(url, "access_token=(.*?)&")
         data.saveToken(token)
-
         CookieSyncManager.createInstance(webView.context).sync()
         val man = CookieManager.getInstance()
         man.removeAllCookies(null)
@@ -65,13 +64,11 @@ class LoginActivity : AppCompatActivity() {
         return matcher.toMatchResult().group(1)
     }
 
-
     private inner class ParsingWebClient : WebViewClient() {
-
         override fun onPageFinished(view: WebView, url: String) {
             super.onPageFinished(view, url)
             if (url.startsWith("https://oauth.vk.com/blank.html")) {
-                webView.visibility = View.GONE
+                webView.setVisible(false)
                 doneWithThis(url)
             }
         }

@@ -1,13 +1,8 @@
 package ru.oshkin.vk_feed.tools
 
 import android.content.Context
-import android.util.Log
 import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.JsonObject
-import com.google.gson.reflect.TypeToken
 import ru.oshkin.vk_feed.retrofit.FeedResponse
-import ru.oshkin.vk_feed.retrofit.InfoProfile
 import ru.oshkin.vk_feed.retrofit.Profile
 import java.io.*
 import java.lang.Exception
@@ -37,7 +32,6 @@ class CacheManager(context: Context) {
 
     fun saveFeed(feedResponse: FeedResponse, isFeed: Boolean) {
         val serialized = gson.toJson(feedResponse)
-        Log.e("qwer", serialized)
         writeToFile(if (isFeed) newsFile else recommendationFile, serialized)
     }
 
@@ -50,19 +44,16 @@ class CacheManager(context: Context) {
         try {
             val data = readFromFile(if (isFeed) newsFile else recommendationFile)
             val deserialized = gson.fromJson<FeedResponse>(data, FeedResponse::class.java)
-            Log.e("qwer", "$deserialized")
             return deserialized
         } catch (e: Exception) {
             return null
         }
-
     }
 
     fun getProfile(): Profile {
         val deserialized = gson.fromJson<Profile>(readFromFile(profileFile), Profile::class.java)
         return deserialized
     }
-
 
     companion object {
         const val FILE_NEWS_FEED = "FileNewsFeed"
@@ -73,6 +64,5 @@ class CacheManager(context: Context) {
         fun init(context: Context) {
             instance = CacheManager(context)
         }
-
     }
 }
