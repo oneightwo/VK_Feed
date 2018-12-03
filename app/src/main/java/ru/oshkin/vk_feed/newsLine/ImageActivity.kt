@@ -1,5 +1,6 @@
 package ru.oshkin.vk_feed.newsLine
 
+import android.Manifest
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -16,6 +17,8 @@ import ru.oshkin.vk_feed.tools.toggle
 import android.widget.LinearLayout
 import android.os.StrictMode
 import android.os.Build
+import ru.oshkin.vk_feed.tools.log
+import ru.oshkin.vk_feed.tools.methodRequiresPerm
 import ru.oshkin.vk_feed.tools.setToast
 
 
@@ -43,20 +46,24 @@ class ImageActivity : AppCompatActivity() {
         }
 
         saveImage.setOnClickListener {
-            Get.saveImage(url) {
-                if (it != null) {
-                    setToast(this, getString(R.string.saved))
-                    addToGallery(this, it)
-                } else {
-                    setToast(this, getString(R.string.error))
+            if (methodRequiresPerm(this)) {
+                Get.saveImage(this, false, url) {
+                    if (it != null) {
+                        setToast(this, getString(R.string.saved))
+                        addToGallery(this, it)
+                    } else {
+                        setToast(this, getString(R.string.error))
+                    }
                 }
             }
         }
         
         shareImage.setOnClickListener {
-            Get.saveImage(url) {
-               val uri = Uri.parse("file://" + it)
-                imageShare(uri)
+            if (methodRequiresPerm(this)) {
+                Get.saveImage(this, true, url) {
+                    val uri = Uri.parse("file://" + it)
+                    imageShare(uri)
+                }
             }
         }
 

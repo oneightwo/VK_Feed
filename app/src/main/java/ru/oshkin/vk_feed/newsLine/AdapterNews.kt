@@ -1,5 +1,6 @@
 package ru.oshkin.vk_feed.newsLine
 
+import android.Manifest
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.LinearLayoutManager
@@ -18,13 +19,27 @@ import ru.oshkin.vk_feed.tools.setVisible
 import java.text.SimpleDateFormat
 import java.util.*
 import android.support.v7.widget.CardView
+import pub.devrel.easypermissions.EasyPermissions
+import ru.oshkin.vk_feed.tools.methodRequiresPerm
 import ru.oshkin.vk_feed.tools.setToast
 
 
 class AdapterNews(
     private val activity: NewsActivity,
     private val loader: () -> Unit
-) : RecyclerView.Adapter<AdapterNews.ViewHolder>() {
+) : RecyclerView.Adapter<AdapterNews.ViewHolder>(), EasyPermissions.PermissionCallbacks {
+
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+
+    }
+
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+
+    }
+
+    override fun onRequestPermissionsResult(p0: Int, p1: Array<out String>, p2: IntArray) {
+
+    }
 
     private val posts = arrayListOf<WallPost>()
     private val groups = hashSetOf<InfoGroup>()
@@ -223,10 +238,12 @@ class AdapterNews(
                 }
             }
             shareImageView.setOnClickListener {
-                val shareIntent = Intent(Intent.ACTION_SEND)
-                shareIntent.type = "text/plain"
-                shareIntent.putExtra(Intent.EXTRA_TEXT, getLinkShare(adapterPosition))
-                activity.startActivity(Intent.createChooser(shareIntent, activity.getString(R.string.share_link)))
+                if (methodRequiresPerm(activity)) {
+                    val shareIntent = Intent(Intent.ACTION_SEND)
+                    shareIntent.type = "text/plain"
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, getLinkShare(adapterPosition))
+                    activity.startActivity(Intent.createChooser(shareIntent, activity.getString(R.string.share_link)))
+                }
             }
         }
     }

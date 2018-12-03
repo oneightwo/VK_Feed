@@ -1,5 +1,6 @@
 package ru.oshkin.vk_feed.retrofit
 
+import android.content.Context
 import android.os.Environment
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -66,7 +67,7 @@ object Get {
             })
     }
 
-    fun saveImage(url: String, callback: (String?) -> Unit) {
+    fun saveImage(context: Context, isShare: Boolean, url: String, callback: (String?) -> Unit) {
         retrofit.downloadFileWithDynamicUrlSync(url)
             .enqueue(object : Callback<ResponseBody> {
                 override fun onFailure(call: Call<ResponseBody>, t: Throwable) {
@@ -76,8 +77,11 @@ object Get {
                 override fun onResponse(call: Call<ResponseBody>, response: Response<ResponseBody>) {
                     val namePicture = getNameFile(url)
                     val file = File(
-                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-                        namePicture
+                        if (isShare) {
+                            context.externalCacheDir
+                        } else {
+                            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                        }, namePicture
                     )
                     if (response.isSuccessful && writeResponseBodyToDisk(file, response.body())) {
                         callback.invoke(file.absolutePath)

@@ -1,5 +1,6 @@
 package ru.oshkin.vk_feed.newsLine
 
+import android.Manifest
 import android.support.v7.widget.CardView
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -7,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
+import pub.devrel.easypermissions.EasyPermissions
+import pub.devrel.easypermissions.PermissionRequest
 import ru.oshkin.vk_feed.R
 import ru.oshkin.vk_feed.retrofit.Photo
 import ru.oshkin.vk_feed.retrofit.PhotoSize
@@ -34,6 +37,7 @@ class AdapterNewsImage(photo: List<Photo>, private val activity: NewsActivity): 
 
     private fun getWidth(photoSize: PhotoSize) =
         (photoSize.width.toDouble() / photoSize.height * cardHeight).toInt()
+
 
     inner class ImageViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 

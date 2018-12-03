@@ -9,4 +9,7 @@
     <string name="share_link">Поделиться ссылкой:</string>
     <string name="saved">Сохранено</string>
     <string name="error">Ошибка</string>
+    <string name="permission_write">Если вы хотите делиться записями или сохранять изображения, разрешите доступ
+        приложению
+    </string>
 </resources>

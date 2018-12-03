@@ -7,7 +7,6 @@ import android.webkit.CookieManager
 import android.webkit.CookieSyncManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
 import ru.oshkin.vk_feed.R
 import ru.oshkin.vk_feed.tools.UserData
 import ru.oshkin.vk_feed.newsLine.NewsActivity
@@ -27,6 +26,7 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         webView = findViewById(R.id.login_wv)
+        webView.settings.javaScriptEnabled = true
     }
 
     override fun onResume() {

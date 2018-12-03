@@ -11,16 +11,9 @@
                 android:id="@+id/newsRecommendationsNav"
                 android:icon="@drawable/ic_web_black_24dp"
                 android:title="Рекомендации"/>
+        <item
+                android:id="@+id/profileOutNav"
+                android:icon="@drawable/ic_exit_to_app"
+                android:title="Выход"/>
     </group>
-
-    <item android:title="">
-        <!--<menu>-->
-            <group android:checkableBehavior="single">
-                <item
-                        android:id="@+id/profileOutNav"
-                        android:icon="@drawable/ic_exit_to_app"
-                        android:title="Выход"/>
-            </group>
-        <!--</menu>-->
-    </item>
 </menu>

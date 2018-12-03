@@ -48,6 +48,8 @@ class NewsActivity : AppCompatActivity() {
 
     }
 
+
+
     private fun getInfoProfile() {
         Get.getProfile {
             if (it != null) {
