@@ -97,30 +97,23 @@ class NewsActivity : AppCompatActivity() {
 
     private fun selectDrawerItem(menuItem: MenuItem) {
         when (menuItem.itemId) {
-            R.id.newsNav -> {
-                if (!isFeed) {
-                    isFeed = true
-                    swipeRefreshLayout.isRefreshing = true
-                    loadData()
-                }
-            }
-            R.id.newsRecommendationsNav -> {
-                if (isFeed) {
-                    isFeed = false
-                    swipeRefreshLayout.isRefreshing = true
-                    loadData()
-                }
+            R.id.newsNav, R.id.newsRecommendationsNav -> {
+                isFeed = !isFeed
+                swipeRefreshLayout.isRefreshing = true
+                Get.clear()
+                loadData()
             }
             R.id.profileOutNav -> {
                 Log.e("menu", "profileOutNav")
                 exitApp()
             }
         }
+
+        recyclerView.layoutManager?.scrollToPosition(0)
         menuItem.isChecked = true
         title = menuItem.title
         drawer.closeDrawers()
     }
-
 
     private fun exitApp() {
         UserData.instance.deleteToken()
