@@ -6,6 +6,9 @@ import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import ru.oshkin.vk_feed.retrofit.Module.FeedResponse
+import ru.oshkin.vk_feed.retrofit.Module.Profile
+import ru.oshkin.vk_feed.retrofit.Module.RequestModel
 import ru.oshkin.vk_feed.tools.UserData
 import ru.oshkin.vk_feed.tools.getNameFile
 import ru.oshkin.vk_feed.tools.writeResponseBodyToDisk

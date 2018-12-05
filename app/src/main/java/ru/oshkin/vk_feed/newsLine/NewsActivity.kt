@@ -19,7 +19,7 @@ import ru.oshkin.vk_feed.R
 import ru.oshkin.vk_feed.tools.UserData
 import ru.oshkin.vk_feed.login.LoginActivity
 import ru.oshkin.vk_feed.retrofit.Get
-import ru.oshkin.vk_feed.retrofit.Profile
+import ru.oshkin.vk_feed.retrofit.Module.Profile
 import ru.oshkin.vk_feed.tools.BlurTranformation
 import ru.oshkin.vk_feed.tools.CacheManager
 import ru.oshkin.vk_feed.tools.setToast
@@ -49,16 +49,18 @@ class NewsActivity : AppCompatActivity() {
     }
 
 
-
     private fun getInfoProfile() {
         Get.getProfile {
-            if (it != null) {
-                setInfoProfile(it)
-                cacheManager.saveProfile(it)
-            } else {
-                setInfoProfile(cacheManager.getProfile())
+            if (!isDestroyed) {
+                if (it != null) {
+                    setInfoProfile(it)
+                    cacheManager.saveProfile(it)
+                } else {
+                    setInfoProfile(cacheManager.getProfile())
+                }
             }
         }
+
     }
 
     private fun initRecyclerView() {
@@ -151,19 +153,21 @@ class NewsActivity : AppCompatActivity() {
 
     private fun loadData() {
         Get.getFeed(isFeed) {
-            if (swipeRefreshLayout.isRefreshing) adapter.clear()
-            swipeRefreshLayout.isRefreshing = false
-            if (it == null) {
-                val data = cacheManager.getFeed(isFeed)
-                if (data != null) {
-                    adapter.add(data)
-                    setToast(this, getString(R.string.error_download))
+            if (!isDestroyed) {
+                if (swipeRefreshLayout.isRefreshing) adapter.clear()
+                swipeRefreshLayout.isRefreshing = false
+                if (it == null) {
+                    val data = cacheManager.getFeed(isFeed)
+                    if (data != null) {
+                        adapter.add(data)
+                        setToast(this, getString(R.string.error_download))
+                    } else {
+                        setToast(this, getString(R.string.error_cache))
+                    }
                 } else {
-                    setToast(this, getString(R.string.error_cache))
+                    cacheManager.saveFeed(it, isFeed)
+                    adapter.add(it)
                 }
-            } else {
-                cacheManager.saveFeed(it, isFeed)
-                adapter.add(it)
             }
         }
 

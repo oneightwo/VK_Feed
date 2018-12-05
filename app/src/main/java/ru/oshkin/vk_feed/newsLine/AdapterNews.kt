@@ -1,6 +1,5 @@
 package ru.oshkin.vk_feed.newsLine
 
-import android.Manifest
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.support.v7.widget.LinearLayoutManager
@@ -14,12 +13,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import ru.oshkin.vk_feed.R
-import ru.oshkin.vk_feed.retrofit.*
 import ru.oshkin.vk_feed.tools.setVisible
 import java.text.SimpleDateFormat
 import java.util.*
 import android.support.v7.widget.CardView
 import pub.devrel.easypermissions.EasyPermissions
+import ru.oshkin.vk_feed.retrofit.Module.*
 import ru.oshkin.vk_feed.tools.methodRequiresPerm
 import ru.oshkin.vk_feed.tools.setToast
 

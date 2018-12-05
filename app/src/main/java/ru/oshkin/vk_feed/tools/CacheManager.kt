@@ -2,8 +2,8 @@ package ru.oshkin.vk_feed.tools
 
 import android.content.Context
 import com.google.gson.Gson
-import ru.oshkin.vk_feed.retrofit.FeedResponse
-import ru.oshkin.vk_feed.retrofit.Profile
+import ru.oshkin.vk_feed.retrofit.Module.FeedResponse
+import ru.oshkin.vk_feed.retrofit.Module.Profile
 import java.io.*
 import java.lang.Exception
 

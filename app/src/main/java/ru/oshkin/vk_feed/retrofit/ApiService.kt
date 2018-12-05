@@ -5,6 +5,9 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 import retrofit2.http.Url
+import ru.oshkin.vk_feed.retrofit.Module.FeedResponse
+import ru.oshkin.vk_feed.retrofit.Module.Profile
+import ru.oshkin.vk_feed.retrofit.Module.RequestModel
 
 
 interface ApiService {
