@@ -19,7 +19,7 @@ import ru.oshkin.vk_feed.R
 import ru.oshkin.vk_feed.tools.UserData
 import ru.oshkin.vk_feed.login.LoginActivity
 import ru.oshkin.vk_feed.retrofit.Get
-import ru.oshkin.vk_feed.retrofit.Module.Profile
+import ru.oshkin.vk_feed.retrofit.model.Profile
 import ru.oshkin.vk_feed.tools.BlurTranformation
 import ru.oshkin.vk_feed.tools.CacheManager
 import ru.oshkin.vk_feed.tools.setToast

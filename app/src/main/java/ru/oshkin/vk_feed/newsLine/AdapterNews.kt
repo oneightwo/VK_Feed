@@ -18,7 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import android.support.v7.widget.CardView
 import pub.devrel.easypermissions.EasyPermissions
-import ru.oshkin.vk_feed.retrofit.Module.*
+import ru.oshkin.vk_feed.retrofit.model.*
 import ru.oshkin.vk_feed.tools.methodRequiresPerm
 import ru.oshkin.vk_feed.tools.setToast
 
@@ -163,7 +163,7 @@ class AdapterNews(
     fun add(response: FeedResponse) {
         isLoading = false
         val before = itemCount
-        posts.addAll(response.items.filter { !it.isEmpty() })
+        posts.addAll(response.items.filter { !it.isEmpty() && it.markedAsAds != 1 })
         groups.addAll(response.groups)
         profiles.addAll(response.profiles)
         notifyItemRangeInserted(before, response.items.size)

@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import com.squareup.picasso.Picasso
 import ru.oshkin.vk_feed.R
-import ru.oshkin.vk_feed.retrofit.Module.Photo
-import ru.oshkin.vk_feed.retrofit.Module.PhotoSize
+import ru.oshkin.vk_feed.retrofit.model.Photo
+import ru.oshkin.vk_feed.retrofit.model.PhotoSize
 import ru.oshkin.vk_feed.tools.setVisible
 
 class AdapterNewsImage(photo: List<Photo>, private val activity: NewsActivity) :
