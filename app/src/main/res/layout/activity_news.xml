@@ -9,7 +9,7 @@
     <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".newsLine.NewsActivity">
+            tools:context=".feed.NewsActivity">
 
         <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"

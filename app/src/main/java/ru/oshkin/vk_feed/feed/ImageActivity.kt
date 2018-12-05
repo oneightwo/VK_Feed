@@ -1,6 +1,5 @@
-package ru.oshkin.vk_feed.newsLine
+package ru.oshkin.vk_feed.feed
 
-import android.Manifest
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -17,7 +16,6 @@ import ru.oshkin.vk_feed.tools.toggle
 import android.widget.LinearLayout
 import android.os.StrictMode
 import android.os.Build
-import ru.oshkin.vk_feed.tools.log
 import ru.oshkin.vk_feed.tools.methodRequiresPerm
 import ru.oshkin.vk_feed.tools.setToast
 

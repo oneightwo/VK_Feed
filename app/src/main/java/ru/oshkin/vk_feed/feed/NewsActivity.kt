@@ -1,4 +1,5 @@
-package ru.oshkin.vk_feed.newsLine
+package ru.oshkin.vk_feed.feed
+
 
 import android.content.Intent
 import android.os.Bundle
@@ -16,13 +17,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.squareup.picasso.Picasso
 import ru.oshkin.vk_feed.R
-import ru.oshkin.vk_feed.tools.UserData
 import ru.oshkin.vk_feed.login.LoginActivity
 import ru.oshkin.vk_feed.retrofit.Get
 import ru.oshkin.vk_feed.retrofit.model.Profile
-import ru.oshkin.vk_feed.tools.BlurTranformation
-import ru.oshkin.vk_feed.tools.CacheManager
-import ru.oshkin.vk_feed.tools.setToast
+import ru.oshkin.vk_feed.tools.*
+import kotlin.math.log
 
 
 class NewsActivity : AppCompatActivity() {
@@ -36,10 +35,10 @@ class NewsActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private var isFeed: Boolean = true
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news)
+
         Get.clear()
         initRecyclerView()
         initToolbar()

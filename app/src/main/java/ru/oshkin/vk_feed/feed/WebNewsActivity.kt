@@ -1,4 +1,4 @@
-package ru.oshkin.vk_feed.newsLine
+package ru.oshkin.vk_feed.feed
 
 import android.content.Context
 import android.content.Intent

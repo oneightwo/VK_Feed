@@ -7,14 +7,12 @@ import android.webkit.CookieManager
 import android.webkit.CookieSyncManager
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import kotlinx.android.synthetic.main.activity_login.*
 import ru.oshkin.vk_feed.R
 import ru.oshkin.vk_feed.tools.UserData
-import ru.oshkin.vk_feed.newsLine.NewsActivity
+import ru.oshkin.vk_feed.feed.NewsActivity
 import ru.oshkin.vk_feed.tools.isOnline
 import ru.oshkin.vk_feed.tools.setToast
 import ru.oshkin.vk_feed.tools.setVisible
-import java.net.URL
 import java.util.regex.Pattern
 
 class LoginActivity : AppCompatActivity() {
