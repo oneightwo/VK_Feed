@@ -1,5 +1,7 @@
 <resources>
-    <string name="app_name">Новости</string>
+    <string name="app_name">Лента</string>
+    <string name="feed">Новости</string>
+    <string name="recommendation">Рекомендации</string>
     <string name="error_download">Ошибка загрузки</string>
     <string name="error_cache">Ошибка загрузки из КЕША</string>
     <string name="share_image">Поделиться изображением:</string>

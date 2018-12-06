@@ -21,7 +21,6 @@ import ru.oshkin.vk_feed.login.LoginActivity
 import ru.oshkin.vk_feed.retrofit.Get
 import ru.oshkin.vk_feed.retrofit.model.Profile
 import ru.oshkin.vk_feed.tools.*
-import kotlin.math.log
 
 
 class NewsActivity : AppCompatActivity() {
@@ -44,9 +43,7 @@ class NewsActivity : AppCompatActivity() {
         initToolbar()
         initSwipeRefresh()
         getInfoProfile()
-
     }
-
 
     private fun getInfoProfile() {
         Get.getProfile {
@@ -59,7 +56,6 @@ class NewsActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
 
     private fun initRecyclerView() {
@@ -70,6 +66,7 @@ class NewsActivity : AppCompatActivity() {
 
     private fun initToolbar() {
         toolbar = findViewById(R.id.toolbar)
+        toolbar.title = getString(R.string.feed)
         setSupportActionBar(toolbar)
         drawer = findViewById(R.id.drawer_layout)
         drawerNV = findViewById(R.id.nvView)
@@ -98,18 +95,26 @@ class NewsActivity : AppCompatActivity() {
 
     private fun selectDrawerItem(menuItem: MenuItem) {
         when (menuItem.itemId) {
-            R.id.newsNav, R.id.newsRecommendationsNav -> {
-                isFeed = !isFeed
-                swipeRefreshLayout.isRefreshing = true
-                Get.clear()
-                loadData()
+            R.id.newsNav -> {
+                if (!isFeed) {
+                    isFeed = true
+                    toolbar.title = getString(R.string.feed)
+                    swipeRefreshLayout.isRefreshing = true
+                    loadData()
+                }
+            }
+            R.id.newsRecommendationsNav -> {
+                if (isFeed) {
+                    isFeed = false
+                    toolbar.title = getString(R.string.recommendation)
+                    swipeRefreshLayout.isRefreshing = true
+                    loadData()
+                }
             }
             R.id.profileOutNav -> {
-                Log.e("menu", "profileOutNav")
                 exitApp()
             }
         }
-
         recyclerView.layoutManager?.scrollToPosition(0)
         menuItem.isChecked = true
         title = menuItem.title
@@ -118,11 +123,11 @@ class NewsActivity : AppCompatActivity() {
 
     private fun exitApp() {
         UserData.instance.deleteToken()
+        cacheManager.deleteData()
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
 
-    //// Действие home/up action bar'а должно открывать или закрывать drawer
     override fun onOptionsItemSelected(item: MenuItem?) =
         when (item?.itemId) {
             android.R.id.home -> {
@@ -145,9 +150,10 @@ class NewsActivity : AppCompatActivity() {
         val nameProfile = drawerNV.getHeaderView(0).findViewById<TextView>(R.id.nameProfileNav)
         val iconProfile = drawerNV.getHeaderView(0).findViewById<ImageView>(R.id.iconProfileNav)
         val backGround = drawerNV.getHeaderView(0).findViewById<ImageView>(R.id.imageNav)
+        val photoProfile = profile.photo
+        Picasso.get().load(photoProfile).into(iconProfile)
+        Picasso.get().load(photoProfile).transform(BlurTranformation(this)).into(backGround)
         nameProfile.text = name
-        Picasso.get().load(profile.photo).into(iconProfile)
-        Picasso.get().load(profile.photo).transform(BlurTranformation(this)).into(backGround)
     }
 
     private fun loadData() {
@@ -169,6 +175,5 @@ class NewsActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
 }

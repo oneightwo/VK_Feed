@@ -7,7 +7,6 @@ import android.preference.PreferenceManager
 class UserData private constructor(context: Context) {
     companion object {
         lateinit var instance: UserData
-//        lateinit var instance: UserData
 
         fun init(context: Context){
             instance = UserData(context)

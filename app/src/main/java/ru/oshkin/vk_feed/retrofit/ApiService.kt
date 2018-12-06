@@ -22,7 +22,6 @@ interface ApiService {
     @GET("newsfeed.getRecommended?v=${Network.VERSION}")
     fun getRecommended(
         @Query("count") count: Int,
-//        @Query("start_from") startFrom: String,
         @Query("access_token") accessToken: String
     ): Call<RequestModel<FeedResponse>>
 

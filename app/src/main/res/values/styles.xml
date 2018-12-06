@@ -8,11 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!-- Кастомная AppTheme.Launcher. Устанавливает в качестве фона вашу drawable -->
     <style name="AppTheme.Launcher">
         <item name="android:windowBackground">@drawable/launch_in</item>
-        <!-- для Android 5+ вы можете поменять цвет colorPrimaryDark, чтобы соответствовать цвету windowBackground -->
-        <!-- <item name="colorPrimaryDark">@android:color/white</item> -->
     </style>
 
     <style name="AppTheme.ToolBar" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
