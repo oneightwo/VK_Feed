@@ -55,12 +55,6 @@ class CacheManager(context: Context) {
         return deserialized
     }
 
-    fun deleteData() {
-        writeToFile(FILE_NEWS_FEED, "")
-        writeToFile(FILE_RECOMMENDATION, "")
-        writeToFile(FILE_PROFILE, "")
-    }
-
     companion object {
         const val FILE_NEWS_FEED = "FileNewsFeed"
         const val FILE_RECOMMENDATION = "FileRecommendation"

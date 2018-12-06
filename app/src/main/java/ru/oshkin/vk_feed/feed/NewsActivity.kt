@@ -100,6 +100,7 @@ class NewsActivity : AppCompatActivity() {
                     isFeed = true
                     toolbar.title = getString(R.string.feed)
                     swipeRefreshLayout.isRefreshing = true
+                    Get.clear()
                     loadData()
                 }
             }
@@ -108,6 +109,7 @@ class NewsActivity : AppCompatActivity() {
                     isFeed = false
                     toolbar.title = getString(R.string.recommendation)
                     swipeRefreshLayout.isRefreshing = true
+                    Get.clear()
                     loadData()
                 }
             }
@@ -123,7 +125,6 @@ class NewsActivity : AppCompatActivity() {
 
     private fun exitApp() {
         UserData.instance.deleteToken()
-        cacheManager.deleteData()
         startActivity(Intent(this, LoginActivity::class.java))
         finish()
     }
